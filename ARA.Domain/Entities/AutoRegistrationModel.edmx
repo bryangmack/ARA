@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AutoEnrollmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="CourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Enrollments">
+          <Key>
+            <PropertyRef Name="EnrollmentID" />
+          </Key>
+          <Property Name="EnrollmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MappingID" Type="int" Nullable="false" />
+          <Property Name="iMISID" Type="int" Nullable="false" />
+          <Property Name="OrderID" Type="int" />
+          <Property Name="EnrolledOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Mappings">
+          <Key>
+            <PropertyRef Name="MappingID" />
+          </Key>
+          <Property Name="MappingID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="SchoologyCourseID" Type="int" />
+          <Property Name="SchoologyGroupID" Type="int" />
+          <Property Name="CECityActivityID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="MaxEnrollment" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Notifications">
+          <Key>
+            <PropertyRef Name="NotificationID" />
+          </Key>
+          <Property Name="NotificationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThresholdID" Type="int" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="NotifiedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sections">
+          <Key>
+            <PropertyRef Name="SectionID" />
+          </Key>
+          <Property Name="SectionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseID" Type="int" Nullable="false" />
+          <Property Name="RegistrationOpen" Type="datetime" />
+          <Property Name="RegistrationCloses" Type="datetime" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SKUs">
+          <Key>
+            <PropertyRef Name="SKU" />
+          </Key>
+          <Property Name="SKU" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Thresholds">
+          <Key>
+            <PropertyRef Name="ThresholdID" />
+          </Key>
+          <Property Name="ThresholdID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThresholdLevel" Type="int" Nullable="false" />
+          <Property Name="Recipients" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailBody" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Enrollments_Mappings">
+          <End Role="Mappings" Type="Self.Mappings" Multiplicity="1" />
+          <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mappings">
+              <PropertyRef Name="MappingID" />
+            </Principal>
+            <Dependent Role="Enrollments">
+              <PropertyRef Name="MappingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mappings_Sections">
+          <End Role="Sections" Type="Self.Sections" Multiplicity="1" />
+          <End Role="Mappings" Type="Self.Mappings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="Mappings">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Sections">
+          <End Role="Sections" Type="Self.Sections" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Thresholds">
+          <End Role="Thresholds" Type="Self.Thresholds" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thresholds">
+              <PropertyRef Name="ThresholdID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="ThresholdID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sections_Courses">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="Sections" Type="Self.Sections" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseID" />
+            </Principal>
+            <Dependent Role="Sections">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SKUs_Sections">
+          <End Role="Sections" Type="Self.Sections" Multiplicity="1" />
+          <End Role="SKUs" Type="Self.SKUs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="SKUs">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AutoEnrollmentModelStoreContainer">
+          <EntitySet Name="Courses" EntityType="Self.Courses" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="Enrollments" EntityType="Self.Enrollments" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="Mappings" EntityType="Self.Mappings" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="Notifications" EntityType="Self.Notifications" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="Sections" EntityType="Self.Sections" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="SKUs" EntityType="Self.SKUs" Schema="edu" store:Type="Tables" />
+          <EntitySet Name="Thresholds" EntityType="Self.Thresholds" Schema="edu" store:Type="Tables" />
+          <AssociationSet Name="FK_Enrollments_Mappings" Association="Self.FK_Enrollments_Mappings">
+            <End Role="Mappings" EntitySet="Mappings" />
+            <End Role="Enrollments" EntitySet="Enrollments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mappings_Sections" Association="Self.FK_Mappings_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="Mappings" EntitySet="Mappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Sections" Association="Self.FK_Notifications_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Thresholds" Association="Self.FK_Notifications_Thresholds">
+            <End Role="Thresholds" EntitySet="Thresholds" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sections_Courses" Association="Self.FK_Sections_Courses">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="Sections" EntitySet="Sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SKUs_Sections" Association="Self.FK_SKUs_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="SKUs" EntitySet="SKUs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AutoEnrollmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="CourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Sections" Relationship="Self.FK_Sections_Courses" FromRole="Courses" ToRole="Sections" />
+        </EntityType>
+        <EntityType Name="Enrollment">
+          <Key>
+            <PropertyRef Name="EnrollmentID" />
+          </Key>
+          <Property Name="EnrollmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MappingID" Type="Int32" Nullable="false" />
+          <Property Name="iMISID" Type="Int32" Nullable="false" />
+          <Property Name="OrderID" Type="Int32" />
+          <Property Name="EnrolledOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Mapping" Relationship="Self.FK_Enrollments_Mappings" FromRole="Enrollments" ToRole="Mappings" />
+        </EntityType>
+        <EntityType Name="Mapping">
+          <Key>
+            <PropertyRef Name="MappingID" />
+          </Key>
+          <Property Name="MappingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SectionID" Type="Int32" Nullable="false" />
+          <Property Name="SchoologyCourseID" Type="Int32" />
+          <Property Name="SchoologyGroupID" Type="Int32" />
+          <Property Name="CECityActivityID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="MaxEnrollment" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Enrollments" Relationship="Self.FK_Enrollments_Mappings" FromRole="Mappings" ToRole="Enrollments" />
+          <NavigationProperty Name="Section" Relationship="Self.FK_Mappings_Sections" FromRole="Mappings" ToRole="Sections" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NotificationID" />
+          </Key>
+          <Property Name="NotificationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThresholdID" Type="Int32" Nullable="false" />
+          <Property Name="SectionID" Type="Int32" Nullable="false" />
+          <Property Name="NotifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Section" Relationship="Self.FK_Notifications_Sections" FromRole="Notifications" ToRole="Sections" />
+          <NavigationProperty Name="Threshold" Relationship="Self.FK_Notifications_Thresholds" FromRole="Notifications" ToRole="Thresholds" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionID" />
+          </Key>
+          <Property Name="SectionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="RegistrationOpen" Type="DateTime" Precision="3" />
+          <Property Name="RegistrationCloses" Type="DateTime" Precision="3" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Course" Relationship="Self.FK_Sections_Courses" FromRole="Sections" ToRole="Courses" />
+          <NavigationProperty Name="Mappings" Relationship="Self.FK_Mappings_Sections" FromRole="Sections" ToRole="Mappings" />
+          <NavigationProperty Name="Notifications" Relationship="Self.FK_Notifications_Sections" FromRole="Sections" ToRole="Notifications" />
+          <NavigationProperty Name="SKUs" Relationship="Self.FK_SKUs_Sections" FromRole="Sections" ToRole="SKUs" />
+        </EntityType>
+        <EntityType Name="SKU">
+          <Key>
+            <PropertyRef Name="SKU1" />
+          </Key>
+          <Property Name="SKU1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SectionID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Section" Relationship="Self.FK_SKUs_Sections" FromRole="SKUs" ToRole="Sections" />
+        </EntityType>
+        <EntityType Name="Threshold">
+          <Key>
+            <PropertyRef Name="ThresholdID" />
+          </Key>
+          <Property Name="ThresholdID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThresholdLevel" Type="Int32" Nullable="false" />
+          <Property Name="Recipients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Notifications" Relationship="Self.FK_Notifications_Thresholds" FromRole="Thresholds" ToRole="Notifications" />
+        </EntityType>
+        <Association Name="FK_Sections_Courses">
+          <End Role="Courses" Type="AutoEnrollmentModel.Course" Multiplicity="1" />
+          <End Role="Sections" Type="Self.Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseID" />
+            </Principal>
+            <Dependent Role="Sections">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Enrollments_Mappings">
+          <End Role="Mappings" Type="Self.Mapping" Multiplicity="1" />
+          <End Role="Enrollments" Type="Self.Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mappings">
+              <PropertyRef Name="MappingID" />
+            </Principal>
+            <Dependent Role="Enrollments">
+              <PropertyRef Name="MappingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mappings_Sections">
+          <End Role="Sections" Type="Self.Section" Multiplicity="1" />
+          <End Role="Mappings" Type="Self.Mapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="Mappings">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Sections">
+          <End Role="Sections" Type="Self.Section" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Thresholds">
+          <End Role="Thresholds" Type="Self.Threshold" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thresholds">
+              <PropertyRef Name="ThresholdID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="ThresholdID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SKUs_Sections">
+          <End Role="Sections" Type="Self.Section" Multiplicity="1" />
+          <End Role="SKUs" Type="Self.SKU" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="SKUs">
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AutoRegistrationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Courses" EntityType="AutoEnrollmentModel.Course" />
+          <EntitySet Name="Enrollments" EntityType="Self.Enrollment" />
+          <EntitySet Name="Mappings" EntityType="Self.Mapping" />
+          <EntitySet Name="Notifications" EntityType="Self.Notification" />
+          <EntitySet Name="Sections" EntityType="Self.Section" />
+          <EntitySet Name="SKUs" EntityType="Self.SKU" />
+          <EntitySet Name="Thresholds" EntityType="Self.Threshold" />
+          <AssociationSet Name="FK_Sections_Courses" Association="Self.FK_Sections_Courses">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="Sections" EntitySet="Sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Enrollments_Mappings" Association="Self.FK_Enrollments_Mappings">
+            <End Role="Mappings" EntitySet="Mappings" />
+            <End Role="Enrollments" EntitySet="Enrollments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mappings_Sections" Association="Self.FK_Mappings_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="Mappings" EntitySet="Mappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Sections" Association="Self.FK_Notifications_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Thresholds" Association="Self.FK_Notifications_Thresholds">
+            <End Role="Thresholds" EntitySet="Thresholds" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SKUs_Sections" Association="Self.FK_SKUs_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="SKUs" EntitySet="SKUs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AutoEnrollmentModelStoreContainer" CdmEntityContainer="AutoRegistrationEntities">
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Course">
+              <MappingFragment StoreEntitySet="Courses">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Enrollments">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Enrollment">
+              <MappingFragment StoreEntitySet="Enrollments">
+                <ScalarProperty Name="EnrollmentID" ColumnName="EnrollmentID" />
+                <ScalarProperty Name="MappingID" ColumnName="MappingID" />
+                <ScalarProperty Name="iMISID" ColumnName="iMISID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="EnrolledOn" ColumnName="EnrolledOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mappings">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Mapping">
+              <MappingFragment StoreEntitySet="Mappings">
+                <ScalarProperty Name="MappingID" ColumnName="MappingID" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="SchoologyCourseID" ColumnName="SchoologyCourseID" />
+                <ScalarProperty Name="SchoologyGroupID" ColumnName="SchoologyGroupID" />
+                <ScalarProperty Name="CECityActivityID" ColumnName="CECityActivityID" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="MaxEnrollment" ColumnName="MaxEnrollment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Notification">
+              <MappingFragment StoreEntitySet="Notifications">
+                <ScalarProperty Name="NotificationID" ColumnName="NotificationID" />
+                <ScalarProperty Name="ThresholdID" ColumnName="ThresholdID" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="NotifiedOn" ColumnName="NotifiedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sections">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Section">
+              <MappingFragment StoreEntitySet="Sections">
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="RegistrationOpen" ColumnName="RegistrationOpen" />
+                <ScalarProperty Name="RegistrationCloses" ColumnName="RegistrationCloses" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SKUs">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.SKU">
+              <MappingFragment StoreEntitySet="SKUs">
+                <ScalarProperty Name="SKU1" ColumnName="SKU" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Thresholds">
+            <EntityTypeMapping TypeName="AutoEnrollmentModel.Threshold">
+              <MappingFragment StoreEntitySet="Thresholds">
+                <ScalarProperty Name="ThresholdID" ColumnName="ThresholdID" />
+                <ScalarProperty Name="ThresholdLevel" ColumnName="ThresholdLevel" />
+                <ScalarProperty Name="Recipients" ColumnName="Recipients" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARA.Domain", "ARA.Domain\ARA.Domain.csproj", "{7A03DF60-407B-46AF-BBB7-CC3C1F08DD9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARA.WebUI", "ARA.WebUI\ARA.WebUI.csproj", "{3D6AF9EC-34A3-49D4-8137-67AA85A8E27D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARA.UnitTests", "ARA.UnitTests\ARA.UnitTests.csproj", "{D3135F48-C4AB-4236-AF0F-C672B95FA5DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A03DF60-407B-46AF-BBB7-CC3C1F08DD9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A03DF60-407B-46AF-BBB7-CC3C1F08DD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A03DF60-407B-46AF-BBB7-CC3C1F08DD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A03DF60-407B-46AF-BBB7-CC3C1F08DD9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6AF9EC-34A3-49D4-8137-67AA85A8E27D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6AF9EC-34A3-49D4-8137-67AA85A8E27D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6AF9EC-34A3-49D4-8137-67AA85A8E27D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6AF9EC-34A3-49D4-8137-67AA85A8E27D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3135F48-C4AB-4236-AF0F-C672B95FA5DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3135F48-C4AB-4236-AF0F-C672B95FA5DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3135F48-C4AB-4236-AF0F-C672B95FA5DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3135F48-C4AB-4236-AF0F-C672B95FA5DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

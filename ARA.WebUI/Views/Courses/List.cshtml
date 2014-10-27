@@ -1,0 +1,16 @@
+﻿@using ARA.Domain.Entities
+@model IEnumerable<Course>
+
+@{
+    ViewBag.Title = "Courses";
+}
+
+@foreach (var c in Model)
+{
+    <div>
+        <h3>@c.Name</h3>
+        ID: @c.CourseID
+        @Html.ActionLink("Edit", "Edit", new { id=c.CourseID })
+    </div>
+}
+
